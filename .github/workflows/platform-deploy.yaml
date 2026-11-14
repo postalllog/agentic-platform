@@ -1,0 +1,27 @@
+name: Publicar agente no AgentCore
+on:
+  workflow_dispatch:
+    inputs:
+      workload:
+        description: 'Caminho: workloads/agents/hello-world ou workloads/mcp-servers/hello-tools'
+        required: true
+        type: string
+      environment:
+        description: Ambiente AWS de destino
+        required: true
+        type: choice
+        options: [dev, hom, prod]
+        default: dev
+permissions:
+  id-token: write
+  contents: read
+jobs:
+  deploy:
+    uses: postalllog/reusable-workflows/.github/workflows/reusable-agentcore-deploy.yaml@main
+    with:
+      environment: ${{ inputs.environment }}
+      workload: ${{ inputs.workload }}
+      # Configure AGENTCORE_ARTIFACT_BUCKET_DEV, _HOM and _PROD as Actions variables.
+      artifact_bucket: ${{ inputs.environment == 'dev' && vars.AGENTCORE_ARTIFACT_BUCKET_DEV || inputs.environment == 'hom' && vars.AGENTCORE_ARTIFACT_BUCKET_HOM || vars.AGENTCORE_ARTIFACT_BUCKET_PROD }}
+      aws_region: us-east-1
+    secrets: inherit
