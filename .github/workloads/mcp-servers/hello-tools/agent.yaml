@@ -1,0 +1,18 @@
+apiVersion: postalllog.ai/v1
+kind: MCPServer
+metadata:
+  name: hello-tools
+  owner: platform
+spec:
+  runtime:
+    deployment: code_zip
+    protocol: MCP
+    entrypoint: main.py
+  exposure:
+    authentication: IAM
+  models:
+    arns: []
+  capabilities:
+    memory: false
+    browser: false
+    code_interpreter: false
